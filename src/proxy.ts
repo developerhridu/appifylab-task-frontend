@@ -1,33 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-
-const AUTH_COOKIE = "access_token";
-const PROTECTED = ["/feed"];
-const AUTH_PAGES = ["/login", "/register"];
+import { NextResponse } from "next/server";
 
 /**
- * Edge gate on cookie presence only (cheap). The API still validates the JWT on
- * every request, so a forged/expired cookie never grants data — this just handles
- * navigation UX (bounce logged-out users to /login, logged-in users away from auth pages).
+ * Auth gating lives client-side (see the protected layout), not here: the auth
+ * cookie is httpOnly on the cross-origin API domain, so the edge never receives
+ * it and can't reliably tell logged-in from logged-out. Gating on a cookie we
+ * can't read would wrongly bounce a just-logged-in user off /feed back to /login.
  */
-export function proxy(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  const hasToken = req.cookies.has(AUTH_COOKIE);
-
-  if (PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`)) && !hasToken) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  if (AUTH_PAGES.includes(pathname) && hasToken) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/feed";
-    return NextResponse.redirect(url);
-  }
-
+export function proxy() {
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/feed/:path*", "/login", "/register"],
-};
