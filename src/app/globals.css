@@ -1,0 +1,21 @@
+/* App-level globals. Visual styling comes from the ported Bootstrap + custom
+   theme CSS in /public/assets/css (loaded via <link> in the root layout). */
+
+:root {
+  --brand: #377dff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
