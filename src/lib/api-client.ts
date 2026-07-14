@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5199";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://appifylab-task-backend-ywpz.onrender.com";
 
 export class ApiError extends Error {
   status: number;
@@ -27,7 +27,14 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     body: isForm ? (body as BodyInit) : body ? JSON.stringify(body) : undefined,
   };
 
-  const res = await fetch(`${API_URL}${path}`, init);
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, init);
+  } catch {
+    // Network-level failure (server down, wrong API URL, CORS/TLS) — surface it
+    // instead of throwing a raw TypeError that the UI can't recognize.
+    throw new ApiError(0, `Cannot reach the API at ${API_URL}. Is the backend running and NEXT_PUBLIC_API_URL correct?`);
+  }
 
   if (res.status === 204) return undefined as T;
 

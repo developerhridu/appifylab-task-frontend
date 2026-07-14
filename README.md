@@ -39,10 +39,12 @@ The original mock markup + assets are preserved in `design-reference/`; the desi
 `.env.local`:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5199
+NEXT_PUBLIC_API_URL=http://localhost:5261
 ```
 
 Point this at your deployed API URL in production. The backend's `Cors:AllowedOrigins` must include this app's origin, and (cross-site prod) the auth cookie is issued `SameSite=None; Secure`.
+
+> **Dev must be same-scheme.** The Next dev server is `http://localhost:3000`, so point `NEXT_PUBLIC_API_URL` at the backend's **http** URL (`http://localhost:5261`), not its https port. Mixing `http` page ↔ `https` API is cross-site under schemeful-same-site, so the `SameSite=Lax` auth cookie won't be sent and the feed guard bounces you back to `/login`.
 
 ## Run
 
