@@ -19,3 +19,47 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+/* ---- Responsive navbar ----
+   The ported theme hides the desktop navbar entirely below 992px (it expects a
+   separate mobile menu that this app doesn't ship). Instead, keep the top navbar
+   and its search input visible, laid out in a wrapping row down to small screens. */
+@media (max-width: 991px) {
+  ._header_nav {
+    display: block !important;
+  }
+  ._header_nav > .container {
+    flex-wrap: nowrap !important;
+  }
+  /* Keep the collapse on the same row as the logo (Bootstrap gives it
+     flex-basis:100% below the expand breakpoint, which forces a wrap). */
+  ._header_nav .navbar-collapse.show {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex: 1 1 auto !important;
+    width: auto !important;
+  }
+  ._header_nav ._header_form {
+    flex: 1 1 140px;
+    min-width: 110px;
+    margin: 0 12px !important;
+  }
+  ._header_nav ._inpt1 {
+    width: 100%;
+  }
+  /* Bootstrap makes .navbar-nav a column below the breakpoint — force a row. */
+  ._header_nav ._header_nav_list {
+    flex-direction: row !important;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: 0 !important;
+  }
+  ._header_nav ._header_nav_item {
+    margin: 0 4px;
+  }
+  ._header_nav ._header_nav_link {
+    padding: 14px 8px 16px !important;
+  }
+}
