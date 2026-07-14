@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static assets and the design reference are not app source; their
+    // vendored/minified JS breaks lint parsing.
+    "public/**",
+    "design-reference/**",
   ]),
 ]);
 
